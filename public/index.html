@@ -3,15 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <title>La fête à Macron</title>
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 <style>
-  #animation_container, #_preload_div_ {
-	position:absolute;
-	margin:auto;
-	left:0;right:0;
-	top:0;bottom:0;
-  }
+	body{
+		width: 100vw;
+		height:100vh;
+		overflow: hidden;
+		-webkit-user-select: none;
+	}
+	canvas
+	{
+		-webkit-tap-highlight-color: rgba(0,0,0,0);
+	}
+	*:not(input):not(textarea) {
+		-webkit-user-select: none; /* disable selection/Copy of UIWebView */
+		-webkit-touch-callout: none; /* disable the IOS popup when long-press on a link */
+	} 
+  	#animation_container, 
+	#_preload_div_ 
+	{
+		position:absolute;
+		margin:auto;
+		left:0;right:0;
+		top:0;bottom:0;
+ 	}
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.1/mobile-detect.min.js"></script>
 <!-- update the version number as needed -->
 <script src="/__/firebase/4.13.0/firebase-app.js"></script>
 <!-- include only the Firebase features as you need -->
@@ -21,7 +39,19 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.4/TweenMax.min.js'></script>
 <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
 <script src="./js/app.js"></script>
-
+<script>
+	document.addEventListener("touchstart", ()=>{}, true);
+	var lastTouchEnd = 0;
+	document.addEventListener('touchmove',(event)=>{
+		//event.preventDefault();
+		if (event.scale !== 1) { event.preventDefault(); }
+	}, false);
+	// document.addEventListener('touchend',(event)=>{
+	// 	var now = (new Date()).getTime();
+  	// 	if (now - lastTouchEnd <= 300) event.preventDefault();
+  	// 	lastTouchEnd = now;
+	// }, false);
+</script>
 <script>
 		var canvas, stage, exportRoot, anim_container, dom_overlay_container, fnStartAnimation;
 		function init() {
@@ -90,7 +120,9 @@
 					canvas.style.height = anim_container.style.height = dom_overlay_container.style.height = preloaderDiv.style.height = h*sRatio+'px';
 					stage.scaleX = pRatio*sRatio;			
 					stage.scaleY = pRatio*sRatio;			
-					lastW = iw; lastH = ih; lastS = sRatio;		
+					lastW = iw; lastH = ih; lastS = sRatio;	
+					
+					canvas.scrollIntoView({behavior: "instant", block: "center", inline: "nearest"});	
 				}
 			}
 			makeResponsive(true,'both',true,1);	
